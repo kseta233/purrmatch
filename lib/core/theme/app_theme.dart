@@ -83,37 +83,38 @@ class AppTheme {
         shadowColor: Colors.black.withValues(alpha: 0.06),
       ),
 
-      // Elevated button
+      // Elevated button - fully rounded
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.lightButtonPrimaryBg,
           foregroundColor: AppColors.lightButtonPrimaryText,
           textStyle: AppTextStyles.button,
           padding: const EdgeInsets.symmetric(
-            horizontal: AppDimensions.spacingLg,
+            horizontal: AppDimensions.spacingXl,
             vertical: AppDimensions.spacingMd,
           ),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppDimensions.radiusMedium),
+            borderRadius: BorderRadius.circular(AppDimensions.radiusFull),
           ),
           minimumSize: const Size(double.infinity, AppDimensions.buttonHeight),
+          elevation: 0,
         ),
       ),
 
-      // Outlined button
+      // Outlined button - fully rounded
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           backgroundColor: AppColors.lightButtonSecondaryBg,
           foregroundColor: AppColors.primary,
           textStyle: AppTextStyles.button,
           padding: const EdgeInsets.symmetric(
-            horizontal: AppDimensions.spacingLg,
+            horizontal: AppDimensions.spacingXl,
             vertical: AppDimensions.spacingMd,
           ),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppDimensions.radiusMedium),
+            borderRadius: BorderRadius.circular(AppDimensions.radiusFull),
           ),
-          side: BorderSide(color: AppColors.primary.withValues(alpha: 0.2)),
+          side: BorderSide(color: AppColors.primary.withValues(alpha: 0.3)),
         ),
       ),
 
@@ -255,37 +256,38 @@ class AppTheme {
         shadowColor: Colors.black.withValues(alpha: 0.4),
       ),
 
-      // Elevated button
+      // Elevated button - fully rounded
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.darkButtonPrimaryBg,
           foregroundColor: AppColors.darkButtonPrimaryText,
           textStyle: AppTextStyles.button,
           padding: const EdgeInsets.symmetric(
-            horizontal: AppDimensions.spacingLg,
+            horizontal: AppDimensions.spacingXl,
             vertical: AppDimensions.spacingMd,
           ),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppDimensions.radiusMedium),
+            borderRadius: BorderRadius.circular(AppDimensions.radiusFull),
           ),
           minimumSize: const Size(double.infinity, AppDimensions.buttonHeight),
+          elevation: 0,
         ),
       ),
 
-      // Outlined button
+      // Outlined button - fully rounded
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           backgroundColor: AppColors.darkButtonSecondaryBg,
           foregroundColor: AppColors.primary,
           textStyle: AppTextStyles.button,
           padding: const EdgeInsets.symmetric(
-            horizontal: AppDimensions.spacingLg,
+            horizontal: AppDimensions.spacingXl,
             vertical: AppDimensions.spacingMd,
           ),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppDimensions.radiusMedium),
+            borderRadius: BorderRadius.circular(AppDimensions.radiusFull),
           ),
-          side: BorderSide(color: AppColors.primary.withValues(alpha: 0.2)),
+          side: BorderSide(color: AppColors.primary.withValues(alpha: 0.3)),
         ),
       ),
 
