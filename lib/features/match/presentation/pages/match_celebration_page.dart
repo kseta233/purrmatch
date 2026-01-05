@@ -90,174 +90,262 @@ class _MatchCelebrationPageState extends State<MatchCelebrationPage>
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: AppColors.primary,
-      body: SafeArea(
-        child: AnimatedBuilder(
-          animation: _controller,
-          builder: (context, child) {
-            return FadeTransition(
-              opacity: _fadeAnimation,
-              child: ScaleTransition(
-                scale: _scaleAnimation,
-                child: _buildContent(isDark),
-              ),
-            );
-          },
+      backgroundColor: const Color(0xFFFFF8F1), // White with a bit of orange
+      body: Stack(
+        children: [
+          SafeArea(
+            child: AnimatedBuilder(
+              animation: _controller,
+              builder: (context, child) {
+                return FadeTransition(
+                  opacity: _fadeAnimation,
+                  child: ScaleTransition(
+                    scale: _scaleAnimation,
+                    child: _buildContent(isDark),
+                  ),
+                );
+              },
+            ),
+          ),
+          
+          // Floating Glass Back/Close Button
+          Positioned(
+            top: MediaQuery.of(context).padding.top + 10,
+            left: 20,
+            child: _glassButton(
+              icon: Icons.close,
+              onTap: _goBackToFeed,
+              isDark: isDark,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _glassButton({
+    required IconData icon,
+    required VoidCallback onTap,
+    required bool isDark,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: ClipOval(
+        child: Container(
+          width: 44,
+          height: 44,
+          decoration: BoxDecoration(
+            color: Colors.black.withValues(alpha: 0.05),
+            shape: BoxShape.circle,
+          ),
+          child: Icon(icon, color: AppColors.primary, size: 24),
         ),
       ),
     );
   }
 
   Widget _buildContent(bool isDark) {
-    final owner = _matchedCat?['owner'] as Map<String, dynamic>?;
-
-    return Padding(
-      padding: const EdgeInsets.all(AppDimensions.spacingLg),
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Header
-          Text(
-            'It\'s a Match! 🎉',
-            style: AppTextStyles.displayLarge.copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
+          const SizedBox(height: 60),
           
-          const SizedBox(height: AppDimensions.spacingSm),
-          
-          Text(
-            'You and ${_matchedCat?['name'] ?? 'this cat'} liked each other!',
-            style: AppTextStyles.bodyLarge.copyWith(
-              color: Colors.white.withValues(alpha: 0.9),
-            ),
-            textAlign: TextAlign.center,
-          ),
-
-          const SizedBox(height: AppDimensions.spacingXxl),
-
-          // Cat photos side by side
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // My cat
-              _buildCatAvatar(
-                imageUrl: _myCat?['photo'] ?? 'https://placekitten.com/200/200',
-                name: _myCat?['name'] ?? 'Your Cat',
-                isLeft: true,
-              ),
-              
-              // Heart icon in the middle
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16),
-                child: const Icon(
-                  Icons.favorite,
-                  color: Colors.white,
-                  size: 40,
-                ),
-              ),
-              
-              // Matched cat
-              _buildCatAvatar(
-                imageUrl: (_matchedCat?['photos'] as List?)?.first ?? 'https://placekitten.com/201/201',
-                name: _matchedCat?['name'] ?? 'Matched Cat',
-                isLeft: false,
-              ),
-            ],
-          ),
-
-          const SizedBox(height: AppDimensions.spacingXxl),
-
-          // Owner contact section
-          Container(
-            padding: const EdgeInsets.all(AppDimensions.spacingLg),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(AppDimensions.radiusLarge),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.1),
-                  blurRadius: 20,
-                  offset: const Offset(0, 10),
-                ),
-              ],
-            ),
-            child: Column(
+          // Cat photos side by side (Overlapping)
+          SizedBox(
+            height: 160,
+            child: Stack(
+              alignment: Alignment.center,
               children: [
-                Text(
-                  'Owner Contact',
-                  style: AppTextStyles.titleMedium.copyWith(
-                    color: AppColors.lightTextPrimary,
+                // Heart icon in the middle (Z-index high)
+                Positioned(
+                  bottom: 50,
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(color: Colors.black12, blurRadius: 10),
+                      ],
+                    ),
+                    child: const Icon(
+                      Icons.favorite,
+                      color: AppColors.primary,
+                      size: 28,
+                    ),
                   ),
                 ),
                 
-                const SizedBox(height: AppDimensions.spacingMd),
-                
-                // Owner info
+                // Avatars
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircleAvatar(
-                      radius: 24,
-                      backgroundImage: NetworkImage(
-                        owner?['photo'] ?? 'https://i.pravatar.cc/150',
+                    // My cat
+                    _buildCatAvatar(
+                      imageUrl: _myCat?['photo'] ?? 'https://placekitten.com/200/200',
+                      name: _myCat?['name'] ?? 'Whiskers',
+                    ),
+                    
+                    // Use Transform to overlap without negative SizedBox
+                    Transform.translate(
+                      offset: const Offset(-30, 0),
+                      child: _buildCatAvatar(
+                        imageUrl: (_matchedCat?['photos'] as List?)?.first ?? 'https://placekitten.com/201/201',
+                        name: _matchedCat?['name'] ?? 'Mochi',
                       ),
                     ),
-                    const SizedBox(width: 12),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          owner?['name'] ?? 'Cat Owner',
-                          style: AppTextStyles.bodyLarge.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.lightTextPrimary,
-                          ),
-                        ),
-                        Text(
-                          owner?['instagram'] ?? '@instagram',
-                          style: AppTextStyles.bodyMedium.copyWith(
-                            color: AppColors.primary,
-                          ),
-                        ),
-                      ],
-                    ),
                   ],
-                ),
-                
-                const SizedBox(height: AppDimensions.spacingLg),
-                
-                // Instagram button
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    onPressed: _openInstagram,
-                    icon: const Icon(Icons.camera_alt),
-                    label: const Text('Open Instagram'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFE1306C), // Instagram pink
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                    ),
-                  ),
                 ),
               ],
             ),
           ),
-
-          const SizedBox(height: AppDimensions.spacingLg),
-
-          // Back to feed button
-          TextButton(
-            onPressed: _goBackToFeed,
-            child: Text(
-              'Back to Feed',
-              style: AppTextStyles.button.copyWith(
+  
+          const SizedBox(height: 40),
+          
+          // Header
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'It\'s a Match!',
+                style: AppTextStyles.displayMedium.copyWith(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 36,
+                ),
+              ),
+              const SizedBox(width: 8),
+              const Text(
+                '🎉',
+                style: TextStyle(fontSize: 32),
+              ),
+            ],
+          ),
+          
+          const SizedBox(height: 12),
+          
+          Text(
+            'You and ${_matchedCat?['name'] ?? 'Mochi'} liked each other!',
+            style: AppTextStyles.bodyLarge.copyWith(
+              color: AppColors.lightTextSecondary,
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+            ),
+            textAlign: TextAlign.center,
+          ),
+  
+          const SizedBox(height: 40),
+  
+          // Owner contact section (Card)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+              decoration: BoxDecoration(
                 color: Colors.white,
+                borderRadius: BorderRadius.circular(32),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.primary.withValues(alpha: 0.1),
+                    blurRadius: 30,
+                    offset: const Offset(0, 15),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    'Owner Contact',
+                    style: AppTextStyles.titleLarge.copyWith(
+                      color: AppColors.lightTextPrimary,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  
+                  const SizedBox(height: 24),
+                  
+                  // Owner details in a row for more card-like feel
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircleAvatar(
+                        radius: 35,
+                        backgroundImage: NetworkImage(
+                          _matchedCat?['owner']?['photo'] ?? 'https://i.pravatar.cc/150?u=sarah',
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _matchedCat?['owner']?['name'] ?? 'Sarah Kusuma',
+                            style: AppTextStyles.titleMedium.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.lightTextPrimary,
+                            ),
+                          ),
+                          Text(
+                            _matchedCat?['owner']?['instagram'] ?? '@sarahkusuma',
+                            style: AppTextStyles.bodyMedium.copyWith(
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  
+                  const SizedBox(height: 32),
+                  
+                  // Instagram button
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _openInstagram,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFE91E63),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 18),
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(AppDimensions.radiusFull),
+                        ),
+                      ),
+                      child: Text(
+                        'Open Instagram',
+                        style: AppTextStyles.button.copyWith(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
+  
+          const SizedBox(height: 48),
+  
+          // Back action button
+          TextButton(
+            onPressed: _goBackToFeed,
+            child: Text(
+              'Keep Swiping',
+              style: AppTextStyles.bodyLarge.copyWith(
+                color: AppColors.primary,
+                fontWeight: FontWeight.w800,
+                fontSize: 18,
+              ),
+            ),
+          ),
+          
+          const SizedBox(height: 40),
         ],
       ),
     );
@@ -266,35 +354,38 @@ class _MatchCelebrationPageState extends State<MatchCelebrationPage>
   Widget _buildCatAvatar({
     required String imageUrl,
     required String name,
-    required bool isLeft,
   }) {
     return Column(
       children: [
         Container(
-          width: 100,
-          height: 100,
+          width: 120,
+          height: 120,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(color: Colors.white, width: 4),
+            color: Colors.white,
+            border: Border.all(color: Colors.white, width: 5),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.2),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 10,
-                offset: const Offset(0, 4),
+                offset: const Offset(0, 5),
               ),
             ],
-            image: DecorationImage(
-              image: NetworkImage(imageUrl),
+          ),
+          child: ClipOval(
+            child: Image.network(
+              imageUrl,
               fit: BoxFit.cover,
             ),
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 12),
         Text(
           name,
-          style: AppTextStyles.bodyMedium.copyWith(
+          style: AppTextStyles.titleMedium.copyWith(
             color: Colors.white,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w800,
+            fontSize: 18,
           ),
         ),
       ],
