@@ -128,13 +128,7 @@ class _LoginPageState extends State<LoginPage> {
               
               // Navigate to feed after a short delay
               Future.delayed(const Duration(milliseconds: 500), () {
-                // TODO: Navigate to feed when it's ready
-                // Get.offAllNamed(AppRoutes.feed);
-                Get.snackbar(
-                  'Coming Soon',
-                  'Feed page will be available soon!',
-                  snackPosition: SnackPosition.BOTTOM,
-                );
+                Get.offAllNamed('/feed');
               });
               
               _logoTapCount = 0; // Reset counter
@@ -340,12 +334,8 @@ class _LoginPageState extends State<LoginPage> {
         ),
         TextButton(
           onPressed: () {
-            // TODO: Navigate to register page
-            Get.snackbar(
-              'Register',
-              'Registration page will be implemented soon',
-              snackPosition: SnackPosition.BOTTOM,
-            );
+            // Navigate to register page
+            Get.toNamed('/register/user-profile');
           },
           style: TextButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: AppDimensions.spacingXs),

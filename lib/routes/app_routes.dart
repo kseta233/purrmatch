@@ -1,5 +1,9 @@
 import 'package:get/get.dart';
 import '../features/auth/presentation/pages/login_page.dart';
+import '../features/registration/presentation/pages/create_user_profile_page.dart';
+import '../features/registration/presentation/pages/add_cat_profile_page.dart';
+import '../features/feed/presentation/pages/feed_page.dart';
+import '../features/match/presentation/pages/match_celebration_page.dart';
 
 /// App routes configuration
 class AppRoutes {
@@ -22,33 +26,29 @@ class AppRoutes {
     GetPage(
       name: login,
       page: () => const LoginPage(),
-      // binding: AuthBinding(), // TODO: Add when controller is ready
     ),
-    // TODO: Add other routes as pages are created
-    /*
     GetPage(
       name: createUserProfile,
-      page: () => CreateUserProfilePage(),
-      binding: RegistrationBinding(),
+      page: () => const CreateUserProfilePage(),
     ),
     GetPage(
       name: addCatProfile,
-      page: () => AddCatProfilePage(),
-      binding: RegistrationBinding(),
+      page: () => const AddCatProfilePage(),
     ),
     GetPage(
       name: feed,
-      page: () => FeedPage(),
-      binding: FeedBinding(),
+      page: () => const FeedPage(),
     ),
+    GetPage(
+      name: matchCelebration,
+      page: () => const MatchCelebrationPage(),
+    ),
+    // TODO: Add remaining routes
+    /*
     GetPage(
       name: profile,
       page: () => ProfilePage(),
       binding: ProfileBinding(),
-    ),
-    GetPage(
-      name: matchCelebration,
-      page: () => MatchCelebrationPage(),
     ),
     */
   ];
